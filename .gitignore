@@ -1,0 +1,8 @@
+target
+.idea
+.gradle
+#Idea
+*.iml
+*.ipr
+*.iws
+build
