@@ -1,4 +1,4 @@
-package com.webscraping.util;
+package com.webscraping;
 
 import java.net.URI;
 import java.net.URISyntaxException;

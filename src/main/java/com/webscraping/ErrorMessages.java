@@ -1,4 +1,4 @@
-package com.webscraping.util;
+package com.webscraping;
 
 public interface ErrorMessages {
     String INVALID_URL = "Make sure url is not empty and must be valid one.";

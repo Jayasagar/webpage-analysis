@@ -1,6 +1,5 @@
-package com.webscraping.util;
+package com.webscraping;
 
-import com.webscraping.util.URIUtils;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

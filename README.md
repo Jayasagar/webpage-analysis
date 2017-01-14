@@ -18,6 +18,13 @@
 #### Local Test url:
 * http://localhost:8080/scraping/analyse?url=http://google.com
 
+#### Testing notes
+* some url used to test 
+** http://github.com
+** http://google.com
+** http://ycombinator.com/
+
+
 #### Some notes
 * A URI just identifies a resource - not necessarily a location of that resource.
 * 

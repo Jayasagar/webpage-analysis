@@ -18,28 +18,66 @@ var Link = React.createClass({
   }
 });
 
+var HeadingLevel = React.createClass({
+
+  getInitialState: function() {
+    return {display: true };
+  },
+
+  render: function() {
+    if (this.state.display==false) return null;
+    else return (
+      <tr>
+          <td>{this.props.level}</td>
+          <td>{this.props.count}</td>
+      </tr>
+    );
+  }
+});
+
 var AnalysisResult = React.createClass({
 
   render: function() {
 
     var hypermediaLinks = [];
-    debugger;
-    console.log("result:"+this.props.result);
+    var headingGroups = [];
     if (this.props.result.hypermediaLinks) {
-        this.props.result.hypermediaLinks.INTERNAL.forEach(function(hypermedia) {
-          hypermediaLinks.push(
-            <Link link={hypermedia} key={hypermedia.link} domain={"Internal"}/>);
-        });
-        this.props.result.hypermediaLinks.EXTERNAL.forEach(function(hypermedia) {
+        if (this.props.result.hypermediaLinks.INTERNAL) {
+            this.props.result.hypermediaLinks.INTERNAL.forEach(function(hypermedia) {
               hypermediaLinks.push(
-                <Link link={hypermedia} key={hypermedia.link} domain={"External"} />);
-        });
+                <Link link={hypermedia} key={hypermedia.link} domain={"Internal"}/>);
+            });
+        }
+        if (this.props.result.hypermediaLinks.EXTERNAL) {
+            this.props.result.hypermediaLinks.EXTERNAL.forEach(function(hypermedia) {
+                  hypermediaLinks.push(
+                    <Link link={hypermedia} key={hypermedia.link} domain={"External"} />);
+            });
+        }
+    }
+    if (this.props.result.headings) {
+        headingGroups.push(<HeadingLevel level={"h1"} key={"h1"} count={this.props.result.headings.h1} />);
+        headingGroups.push(<HeadingLevel level={"h2"} key={"h2"} count={this.props.result.headings.h2} />);
+        headingGroups.push(<HeadingLevel level={"h3"} key={"h3"} count={this.props.result.headings.h3} />);
+        headingGroups.push(<HeadingLevel level={"h4"} key={"h4"} count={this.props.result.headings.h4} />);
+        headingGroups.push(<HeadingLevel level={"h5"} key={"h5"} count={this.props.result.headings.h5} />);
+        headingGroups.push(<HeadingLevel level={"h6"} key={"h6"} count={this.props.result.headings.h6} />);
     }
     return (
        <div>
-            <h6>Page Title:{this.props.result.pageTitle}</h6>
-            <h6>Html Version:{this.props.result.htmlVersion}</h6>
-          <table className="table table-striped">
+            <h6>Page Title: {this.props.result.pageTitle}</h6>
+            <h6>Html Version: {this.props.result.htmlVersion}</h6>
+            <h6>Is this Login form: {'' + this.props.result.loginForm}</h6>
+            <table className="table table-striped">
+              <thead>
+                  <tr>
+                      <th>Heading Level</th>
+                      <th>Number of times used</th>
+                  </tr>
+              </thead>
+              <tbody>{headingGroups}</tbody>
+            </table>
+            <table className="table table-striped">
               <thead>
                   <tr>
                       <th>Url</th>
@@ -49,7 +87,7 @@ var AnalysisResult = React.createClass({
                   </tr>
               </thead>
               <tbody>{hypermediaLinks}</tbody>
-          </table>
+            </table>
       </div>
     );
   }
@@ -57,26 +95,36 @@ var AnalysisResult = React.createClass({
 
 var App = React.createClass({
 
-  getResult: function() {
+  getAnalysisResult: function() {
     var self = this;
     $.ajax({
-        url: "http://localhost:8080/scraping/analyse?url=http://google.com",
-      }).then(function(data) {
-        console.log("data", data);
-        self.setState({ result: data.data });
+        url: "http://localhost:8080/scraping/analyse?url="+this.state.url,
+      }).then(function(result) {
+        self.setState({result: result.data});
       });
   },
 
-  getInitialState: function() {
-    return { result: {} };
+  updateUrl: function(event) {
+    this.setState({url:event.target.value});
   },
 
-  componentDidMount: function() {
-    this.getResult();
+  getInitialState: function() {
+    return {result: {}, url:""};
   },
 
   render() {
-    return ( <AnalysisResult result={this.state.result} /> );
+    return (
+    <div>
+        <h3> Simple web page analysis report. Try out!</h3>
+        <input class="form-control" type="text"
+            onChange={this.updateUrl.bind(this)}
+            placeholder="Enter a valid url..."/>
+
+        <button className="btn btn-info" onClick={this.getAnalysisResult}>Submit</button>
+
+        <AnalysisResult result={this.state.result} />
+    </div>
+    );
   }
 });
 

@@ -2,7 +2,7 @@ package com.webscraping.analyse;
 
 import com.webscraping.analyse.model.HypermediaLink;
 import com.webscraping.analyse.model.LinkGroup;
-import com.webscraping.util.URIUtils;
+import com.webscraping.URIUtils;
 
 import java.util.function.Function;
 

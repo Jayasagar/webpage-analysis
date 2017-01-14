@@ -1,13 +1,14 @@
-package com.webscraping.util;
+package com.webscraping.analyse;
 
 import com.webscraping.analyse.model.AnalysisResult;
 import com.webscraping.analyse.model.HTMLVersion;
 import com.webscraping.analyse.model.HypermediaLink;
 import com.webscraping.analyse.model.LinkGroup;
 import com.webscraping.model.*;
-import com.webscraping.analyse.WebPageAnalyser;
+import com.webscraping.ErrorMessages;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -24,7 +25,7 @@ public class WebPageAnalyserTest {
         ResponseEntity<AnalysisResult> result = new WebPageAnalyser().analysePage("htp://google.com");
 
         assertFalse(result.isStatus());
-        assertEquals(result.getMessage(), ErrorMessages.INVALID_URL);
+        Assert.assertEquals(result.getMessage(), ErrorMessages.INVALID_URL);
     }
 
     @Test
