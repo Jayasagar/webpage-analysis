@@ -1,4 +1,4 @@
-package com.webscraping.model;
+package com.webscraping.analyse.model;
 
 import lombok.Builder;
 import lombok.Getter;

@@ -1,9 +1,9 @@
 package com.webscraping.controller;
 
-import com.webscraping.model.AnalysisResult;
+import com.webscraping.analyse.model.AnalysisResult;
 import com.webscraping.model.ResponseEntity;
 import com.webscraping.util.ErrorMessages;
-import com.webscraping.util.WebPageAnalyser;
+import com.webscraping.analyse.WebPageAnalyser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;

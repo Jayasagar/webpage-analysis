@@ -1,6 +1,8 @@
-package com.webscraping.util;
+package com.webscraping.analyse;
 
+import com.webscraping.analyse.model.*;
 import com.webscraping.model.*;
+import com.webscraping.util.ErrorMessages;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

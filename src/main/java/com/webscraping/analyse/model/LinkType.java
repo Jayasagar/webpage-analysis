@@ -1,7 +1,7 @@
-package com.webscraping.model;
+package com.webscraping.analyse.model;
 
 public enum LinkType {
-    MEDIA("Media"), LINK("link"), IMPORT("Import link");
+    MEDIA("Media"), LINK("Link"), IMPORT("Import");
 
     private String value;
 

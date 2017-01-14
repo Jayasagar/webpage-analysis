@@ -1,8 +1,11 @@
 package com.webscraping.util;
 
+import com.webscraping.analyse.model.AnalysisResult;
+import com.webscraping.analyse.model.HTMLVersion;
+import com.webscraping.analyse.model.HypermediaLink;
+import com.webscraping.analyse.model.LinkGroup;
 import com.webscraping.model.*;
-import com.webscraping.util.ErrorMessages;
-import com.webscraping.util.WebPageAnalyser;
+import com.webscraping.analyse.WebPageAnalyser;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.junit.Test;

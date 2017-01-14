@@ -1,7 +1,8 @@
-package com.webscraping.util;
+package com.webscraping.analyse;
 
-import com.webscraping.model.HypermediaLink;
-import com.webscraping.model.LinkGroup;
+import com.webscraping.analyse.model.HypermediaLink;
+import com.webscraping.analyse.model.LinkGroup;
+import com.webscraping.util.URIUtils;
 
 import java.util.function.Function;
 

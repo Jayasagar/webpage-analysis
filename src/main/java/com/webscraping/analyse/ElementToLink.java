@@ -1,7 +1,7 @@
-package com.webscraping.util;
+package com.webscraping.analyse;
 
-import com.webscraping.model.HypermediaLink;
-import com.webscraping.model.LinkType;
+import com.webscraping.analyse.model.HypermediaLink;
+import com.webscraping.analyse.model.LinkType;
 import org.jsoup.nodes.Element;
 
 import java.util.function.Function;

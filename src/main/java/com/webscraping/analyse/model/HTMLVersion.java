@@ -1,4 +1,4 @@
-package com.webscraping.model;
+package com.webscraping.analyse.model;
 
 public enum HTMLVersion {
     HTML5("HTML 5"), HTML4("HTML 4"), HTML_OLD("Below HTML 4");
