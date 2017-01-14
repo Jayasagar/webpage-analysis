@@ -3,6 +3,7 @@ package com.webscraping.analyse;
 import com.webscraping.analyse.model.*;
 import com.webscraping.model.*;
 import com.webscraping.ErrorMessages;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,15 +19,25 @@ import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
+/**
+ * Responsible for analysing the given url.
+ */
 @Component
+@Slf4j
 public class WebPageAnalyser {
-    public ResponseEntity<AnalysisResult> analysePage(String url) throws URISyntaxException {
+
+    /**
+     * Using Jsoup, this method parse the given url, extracts the data and aggregate into {@link AnalysisResult}.
+     * @param url user submitted url to analyse.
+     */
+    public ResponseEntity<AnalysisResult> analysePage(String url) {
         Connection connection = null;
         try {
             connection = Jsoup
                             .connect(url)
                             .timeout(5000);
         } catch (IllegalArgumentException iae) {
+            log.error(String.format("Unable to analyse the url %s. Check the url.", url));
             return ResponseEntity.error(ErrorMessages.INVALID_URL);
         }
 
@@ -36,6 +47,7 @@ public class WebPageAnalyser {
         try {
             document = connection.get();
         } catch (IOException e) {
+            log.error(String.format("Unable to analyse the url %s. Timeout exception. ", url));
             return ResponseEntity.error(ErrorMessages.TIMEOUT_ERROR);
         }
 
@@ -47,10 +59,10 @@ public class WebPageAnalyser {
         // Get the title
         String title = getPageTitle(document);
 
-        // Get Hypermedia links
+        // Get Hypermedia links by internal/external grouping
         Map<LinkGroup, Set<HypermediaLink>> links = getHypermediaLinks(url, document);
 
-        // Get number of headings
+        // Get number of headings by level grouping
         Map<String, Long> headingCountGroupByLevel = getHeadingGroupByLevel(document);
 
         // Check is the given url is login page?
@@ -67,11 +79,11 @@ public class WebPageAnalyser {
         return ResponseEntity.success(analysisResult);
     }
 
-    protected boolean isLoginForm(Document document) {
+    boolean isLoginForm(Document document) {
         return !document.select("input[type=password]").isEmpty();
     }
 
-    protected Map<String, Long> getHeadingGroupByLevel(Document document) {
+    Map<String, Long> getHeadingGroupByLevel(Document document) {
         Elements headingTags = document.select("h1, h2, h3, h4, h5, h6");
 
         return headingTags
@@ -79,11 +91,11 @@ public class WebPageAnalyser {
                 .collect(groupingBy(element -> element.tagName(), counting()));
     }
 
-    protected String getPageTitle(Document document) {
+    String getPageTitle(Document document) {
         return document.title();
     }
 
-    protected String getPageVersion(Document document) {
+    String getPageVersion(Document document) {
         List<Node> nods = document.childNodes();
         for (Node node : nods) {
             if (node instanceof DocumentType) {
@@ -99,7 +111,7 @@ public class WebPageAnalyser {
         return "";
     }
 
-    protected Map<LinkGroup, Set<HypermediaLink>> getHypermediaLinks(String submittedUrl, Document document) throws URISyntaxException {
+    Map<LinkGroup, Set<HypermediaLink>> getHypermediaLinks(String submittedUrl, Document document) {
 
         Elements links = document.select("a[href]");
         Elements media = document.select("[src]");
@@ -111,14 +123,14 @@ public class WebPageAnalyser {
                 .map(new ElementToLink(LinkType.LINK))
                 .collect(Collectors.toSet());
 
-        System.out.println("anchorTagList" + anchorTagList);
+        log.debug("anchorTagList" + anchorTagList);
 
         // Transfer all import tags to set of HypermediaLink objects
         Set<HypermediaLink> importList = imports
                 .stream()
                 .map(new ElementToLink(LinkType.IMPORT))
                 .collect(Collectors.toSet());
-        System.out.println("importList" + importList);
+        log.debug("importList" + importList);
 
         // Transfer all media tags to set of HypermediaLink objects
         Set<HypermediaLink> mediaList = media
@@ -126,7 +138,7 @@ public class WebPageAnalyser {
                 .map(new ElementToLink(LinkType.MEDIA))
                 .collect(Collectors.toSet());
 
-        System.out.println("mediaList" + mediaList);
+        log.debug("mediaList" + mediaList);
 
         // combine all type of links
         Set<HypermediaLink> allLinks = new HashSet<>(anchorTagList);

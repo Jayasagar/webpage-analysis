@@ -1,4 +1,3 @@
-
 #### Assumptions/understandings
 * Assumed Anchor tags, source attribute tags and link tags as hypermedia links in the implementation
 * Internal link
@@ -9,10 +8,14 @@
 ** .com and .de is treated as different domain
 * If page is login form if it has input type=password.
 
-#### Solution 
+#### Tech stack used 
 * It is Java 8 / Spring boot application
 * Used JSoup for web scraping
 * Gradle
+* ReactJS for web client
+
+#### High level solution flow
+* When the user enters the url then request comes to PageAnalysisController
 * 
 
 #### Local Test url:
@@ -23,6 +26,8 @@
 ** http://github.com
 ** http://google.com
 ** http://ycombinator.com/
+** http://we.com
+** http://spring.io
 
 
 #### Some notes

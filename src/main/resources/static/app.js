@@ -41,7 +41,8 @@ var AnalysisResult = React.createClass({
 
     var hypermediaLinks = [];
     var headingGroups = [];
-    if (this.props.result.hypermediaLinks) {
+    debugger;
+    if (this.props.status && this.props.result.hypermediaLinks) {
         if (this.props.result.hypermediaLinks.INTERNAL) {
             this.props.result.hypermediaLinks.INTERNAL.forEach(function(hypermedia) {
               hypermediaLinks.push(
@@ -55,7 +56,7 @@ var AnalysisResult = React.createClass({
             });
         }
     }
-    if (this.props.result.headings) {
+    if (this.props.status && this.props.result.headings) {
         headingGroups.push(<HeadingLevel level={"h1"} key={"h1"} count={this.props.result.headings.h1} />);
         headingGroups.push(<HeadingLevel level={"h2"} key={"h2"} count={this.props.result.headings.h2} />);
         headingGroups.push(<HeadingLevel level={"h3"} key={"h3"} count={this.props.result.headings.h3} />);
@@ -63,33 +64,41 @@ var AnalysisResult = React.createClass({
         headingGroups.push(<HeadingLevel level={"h5"} key={"h5"} count={this.props.result.headings.h5} />);
         headingGroups.push(<HeadingLevel level={"h6"} key={"h6"} count={this.props.result.headings.h6} />);
     }
-    return (
-       <div>
-            <h6>Page Title: {this.props.result.pageTitle}</h6>
-            <h6>Html Version: {this.props.result.htmlVersion}</h6>
-            <h6>Is this Login form: {'' + this.props.result.loginForm}</h6>
-            <table className="table table-striped">
-              <thead>
-                  <tr>
-                      <th>Heading Level</th>
-                      <th>Number of times used</th>
-                  </tr>
-              </thead>
-              <tbody>{headingGroups}</tbody>
-            </table>
-            <table className="table table-striped">
-              <thead>
-                  <tr>
-                      <th>Url</th>
-                      <th>Domain</th>
-                      <th>Type</th>
-                      <th>Description</th>
-                  </tr>
-              </thead>
-              <tbody>{hypermediaLinks}</tbody>
-            </table>
-      </div>
-    );
+    if (this.props.status) {
+        return (
+           <div>
+                <h6>Page Title: {this.props.result.pageTitle}</h6>
+                <h6>Html Version: {this.props.result.htmlVersion}</h6>
+                <h6>Is this Login form: {'' + this.props.result.loginForm}</h6>
+                <table className="table table-striped">
+                  <thead>
+                      <tr>
+                          <th>Heading Level</th>
+                          <th>Number of times used</th>
+                      </tr>
+                  </thead>
+                  <tbody>{headingGroups}</tbody>
+                </table>
+                <table className="table table-striped">
+                  <thead>
+                      <tr>
+                          <th>Url</th>
+                          <th>Domain</th>
+                          <th>Type</th>
+                          <th>Description</th>
+                      </tr>
+                  </thead>
+                  <tbody>{hypermediaLinks}</tbody>
+                </table>
+          </div>
+        );
+     } else {
+       return (
+                <div>
+                    <span id="inputError">{this.props.message} </span>
+                </div>
+       );
+     }
   }
 });
 
@@ -97,10 +106,17 @@ var App = React.createClass({
 
   getAnalysisResult: function() {
     var self = this;
+    self.setState({result: {}});
     $.ajax({
         url: "http://localhost:8080/scraping/analyse?url="+this.state.url,
       }).then(function(result) {
-        self.setState({result: result.data});
+        debugger;
+        self.setState({status: result.status});
+        if (result.status) {
+            self.setState({result: result.data});
+        } else {
+            self.setState({message: result.message});
+        }
       });
   },
 
@@ -109,7 +125,7 @@ var App = React.createClass({
   },
 
   getInitialState: function() {
-    return {result: {}, url:""};
+    return {result: {}, url:"", status:false, message:""};
   },
 
   render() {
@@ -122,7 +138,7 @@ var App = React.createClass({
 
         <button className="btn btn-info" onClick={this.getAnalysisResult}>Submit</button>
 
-        <AnalysisResult result={this.state.result} />
+        <AnalysisResult result={this.state.result} message={this.state.message} status={this.state.status}/>
     </div>
     );
   }
