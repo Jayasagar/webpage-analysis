@@ -44,7 +44,7 @@ dependencies {
     // Lomback
     compile("org.projectlombok:lombok:1.16.12")
 
-    // Spring Rest template
+    // Spring Boot
     compile("org.springframework.boot:spring-boot-starter")
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-tomcat")
@@ -52,5 +52,4 @@ dependencies {
     // Tests
     testCompile("org.springframework.boot:spring-boot-starter-test")
     testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.+"
 }

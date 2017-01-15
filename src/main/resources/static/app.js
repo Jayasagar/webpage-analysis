@@ -130,14 +130,18 @@ var App = React.createClass({
 
   render() {
     return (
-    <div>
+    <div class="container">
         <h3> Simple web page analysis report. Try out!</h3>
-        <input class="form-control" type="text"
-            onChange={this.updateUrl.bind(this)}
-            placeholder="Enter a valid url..."/>
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="input-group">
+                <input class="form-control" type="text"
+                    onChange={this.updateUrl.bind(this)} placeholder="Enter a valid url..."/>
 
-        <button className="btn btn-info" onClick={this.getAnalysisResult}>Submit</button>
-
+                <button className="btn btn-default" type="button" onClick={this.getAnalysisResult}>Submit</button>
+            </div>
+          </div>
+        </div>
         <AnalysisResult result={this.state.result} message={this.state.message} status={this.state.status}/>
     </div>
     );

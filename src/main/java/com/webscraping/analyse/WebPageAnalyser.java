@@ -1,8 +1,8 @@
 package com.webscraping.analyse;
 
-import com.webscraping.analyse.model.*;
-import com.webscraping.model.*;
 import com.webscraping.ErrorMessages;
+import com.webscraping.analyse.model.*;
+import com.webscraping.model.ResponseEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,11 +13,11 @@ import org.jsoup.select.Elements;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.*;
+import static java.util.stream.Collectors.counting;
+import static java.util.stream.Collectors.groupingBy;
 
 /**
  * Responsible for analysing the given url.
@@ -79,15 +79,23 @@ public class WebPageAnalyser {
         return ResponseEntity.success(analysisResult);
     }
 
+    /**
+     * This method only checks for the input element of type password. If presents then returns true else false.
+     */
     boolean isLoginForm(Document document) {
         return !document.select("input[type=password]").isEmpty();
     }
 
+    /**
+     * Returns the Map of all the html heading levels and their count.
+     */
     Map<String, Long> getHeadingGroupByLevel(Document document) {
+        // Select all the heading level elements
         Elements headingTags = document.select("h1, h2, h3, h4, h5, h6");
 
         return headingTags
                 .stream()
+                // Group by heading level and their total count
                 .collect(groupingBy(element -> element.tagName(), counting()));
     }
 
@@ -95,6 +103,12 @@ public class WebPageAnalyser {
         return document.title();
     }
 
+    /**
+     *  Returns the HTML page version.
+     *  If HTML page has only <!DOCTYPE HTML></!DOCTYPE> then identifies as HTML 5 and returns the same.
+     *  If HTML page has only <!DOCTYPE HTML> with path to dtd, then returns the HTML 4.
+     *  Returns empty string if there are no child nodes in the given {@link Document}
+     */
     String getPageVersion(Document document) {
         List<Node> nods = document.childNodes();
         for (Node node : nods) {
@@ -151,5 +165,4 @@ public class WebPageAnalyser {
 
         return groupByDomain;
     }
-
 }
