@@ -132,27 +132,13 @@ public class WebPageAnalyser {
         Elements imports = document.select("link[href]");
 
         // Transfer all anchor tags to set of HypermediaLink objects
-        Set<HypermediaLink> anchorTagList = links
-                .stream()
-                .map(new ElementToLink(LinkType.LINK))
-                .collect(Collectors.toSet());
-
-        log.debug("anchorTagList" + anchorTagList);
+        Set<HypermediaLink> anchorTagList = collectHypermediaLinks(links, LinkType.LINK);
 
         // Transfer all import tags to set of HypermediaLink objects
-        Set<HypermediaLink> importList = imports
-                .stream()
-                .map(new ElementToLink(LinkType.IMPORT))
-                .collect(Collectors.toSet());
-        log.debug("importList" + importList);
+        Set<HypermediaLink> importList = collectHypermediaLinks(imports, LinkType.IMPORT);
 
         // Transfer all media tags to set of HypermediaLink objects
-        Set<HypermediaLink> mediaList = media
-                .stream()
-                .map(new ElementToLink(LinkType.MEDIA))
-                .collect(Collectors.toSet());
-
-        log.debug("mediaList" + mediaList);
+        Set<HypermediaLink> mediaList = collectHypermediaLinks(media, LinkType.MEDIA);
 
         // combine all type of links
         Set<HypermediaLink> allLinks = new HashSet<>(anchorTagList);
@@ -164,5 +150,12 @@ public class WebPageAnalyser {
                 .collect(groupingBy(new ElementToLinkGroup(submittedUrl), Collectors.toSet()));
 
         return groupByDomain;
+    }
+
+    private Set<HypermediaLink> collectHypermediaLinks(Elements links, LinkType linkType) {
+        return links
+                    .stream()
+                    .map(new ElementToLink(linkType))
+                    .collect(Collectors.toSet());
     }
 }

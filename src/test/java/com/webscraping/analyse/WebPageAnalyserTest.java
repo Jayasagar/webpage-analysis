@@ -8,6 +8,7 @@ import com.webscraping.model.*;
 import com.webscraping.ErrorMessages;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -90,6 +91,8 @@ public class WebPageAnalyserTest {
         // http://news.ycombinator.com/
         // www.google.com
         Document document = Jsoup.connect("http://news.ycombinator.com/").get();
+
+        Elements links1 = document.select("a[href]");
 
         Map<LinkGroup, Set<HypermediaLink>> links = new WebPageAnalyser().getHypermediaLinks("http://news.ycombinator.com/", document);
 
