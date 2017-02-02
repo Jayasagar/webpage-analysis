@@ -31,6 +31,7 @@ public class WebPageAnalyser {
      * @param url user submitted url to analyse.
      */
     public ResponseEntity<AnalysisResult> analysePage(String url) {
+        // Basic url validation
         Connection connection = null;
         try {
             connection = Jsoup
@@ -38,14 +39,18 @@ public class WebPageAnalyser {
                             .timeout(5000);
         } catch (IllegalArgumentException iae) {
             log.error(String.format("Unable to analyse the url %s. Check the url.", url));
-            return ResponseEntity.error(ErrorMessages.INVALID_URL);
+            return ResponseEntity.error(ErrorMessages.INVALID_URL_FORMAT);
         }
 
         Objects.requireNonNull(connection);
 
+        // Connection timeout validation
         Document document = null;
         try {
             document = connection.get();
+        } catch (IllegalArgumentException e) {
+            log.error(String.format("It is not a valid http url. Check the url ", url));
+            return ResponseEntity.error(ErrorMessages.INVALID_HTTP_URL);
         } catch (IOException e) {
             log.error(String.format("Unable to analyse the url %s. Timeout exception. ", url));
             return ResponseEntity.error(ErrorMessages.TIMEOUT_ERROR);
@@ -99,10 +104,6 @@ public class WebPageAnalyser {
                 .collect(groupingBy(element -> element.tagName(), counting()));
     }
 
-    String getPageTitle(Document document) {
-        return document.title();
-    }
-
     /**
      *  Returns the HTML page version.
      *  If HTML page has only <!DOCTYPE HTML></!DOCTYPE> then identifies as HTML 5 and returns the same.
@@ -150,6 +151,10 @@ public class WebPageAnalyser {
                 .collect(groupingBy(new ElementToLinkGroup(submittedUrl), Collectors.toSet()));
 
         return groupByDomain;
+    }
+
+    String getPageTitle(Document document) {
+        return document.title();
     }
 
     private Set<HypermediaLink> collectHypermediaLinks(Elements links, LinkType linkType) {

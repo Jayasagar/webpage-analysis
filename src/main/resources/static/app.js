@@ -108,7 +108,7 @@ var App = React.createClass({
     var self = this;
     self.setState({result: {}});
     $.ajax({
-        url: "http://localhost:8080/scraping/analyse?url="+this.state.url,
+        url: "http://localhost:8902/scraping/analyse?url="+this.state.url,
       }).then(function(result) {
         debugger;
         self.setState({status: result.status});

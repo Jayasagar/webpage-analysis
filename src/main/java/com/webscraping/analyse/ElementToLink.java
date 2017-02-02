@@ -8,7 +8,8 @@ import org.jsoup.nodes.Element;
 import java.util.function.Function;
 
 /**
- * Responsible for creating the {@link HypermediaLink} from the {@link Element}
+ * Responsible for creating the {@link HypermediaLink} from the {@link Element}.
+ * Basically mapping {@link Element} into {@link HypermediaLink}
  */
 @Slf4j
 public class ElementToLink implements Function<Element, HypermediaLink> {

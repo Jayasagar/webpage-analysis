@@ -26,7 +26,7 @@ public class WebPageAnalyserTest {
         ResponseEntity<AnalysisResult> result = new WebPageAnalyser().analysePage("htp://google.com");
 
         assertFalse(result.isStatus());
-        Assert.assertEquals(result.getMessage(), ErrorMessages.INVALID_URL);
+        Assert.assertEquals(result.getMessage(), ErrorMessages.INVALID_URL_FORMAT);
     }
 
     @Test

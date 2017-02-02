@@ -9,7 +9,7 @@ import org.jsoup.nodes.Element;
 import java.util.function.Function;
 
 /**
- * Responsible for creating the {@link LinkGroup} from the {@link HypermediaLink}
+ * Responsible for returning the {@link LinkGroup} based on the {@link HypermediaLink}.
  */
 @Slf4j
 public class ElementToLinkGroup implements Function<HypermediaLink, LinkGroup> {
